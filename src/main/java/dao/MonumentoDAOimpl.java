@@ -138,6 +138,7 @@ public class MonumentoDAOimpl implements MonumentoDAO {
         }
     }
 
+
     @Override
     public void deleteMonumentoByUri(String uri) {
         try (Session session = driver.session()) {
@@ -147,10 +148,42 @@ public class MonumentoDAOimpl implements MonumentoDAO {
     }
 
     @Override
+    public void deleteAllRelationships() {
+        try (Session session = driver.session()) {
+            // Consulta para eliminar todas las relaciones
+            String query = "MATCH ()-[r]-() DELETE r";
+            session.run(query);
+        } catch (Exception e) {
+            System.err.println("Error al eliminar todas las relaciones: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
+    @Override
     public void deleteAllMonumentos() {
         try (Session session = driver.session()) {
             String query = "MATCH (m) DELETE m";
             session.run(query);
         }
     }
+
+    @Override
+    public void connectNearbyMonuments(double distanceThreshold) {
+        try (Session session = driver.session()) {
+            // Usamos MERGE para asegurar que no se creen relaciones duplicadas
+            // y SET para establecer la propiedad 'distance' en la relación
+            String query = "MATCH (m1), (m2) " +
+                    "WHERE m1 <> m2 AND point.distance(m1.location, m2.location) < $distance " +
+                    "MERGE (m1)-[r:CERCANO_A]->(m2) " +
+                    "SET r.distance = point.distance(m1.location, m2.location)";
+            session.run(query, Values.parameters("distance", distanceThreshold));
+        } catch (Exception e) {
+            System.err.println("Error al conectar monumentos cercanos: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+
 }
+

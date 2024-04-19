@@ -12,5 +12,7 @@ public interface MonumentoDAO {
     Monumento findMonumentoByUri(String uri);
     void updateMonumento(Monumento monumento);
     void deleteMonumentoByUri(String uri);
+    void deleteAllRelationships();
     void deleteAllMonumentos();
+    void connectNearbyMonuments(double distanceThreshold);
 }

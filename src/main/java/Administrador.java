@@ -23,7 +23,7 @@ public class Administrador {
                 System.out.println(arco);
             }
 
-            monumentoDAOimpl.deleteAllMonumentos();
+            monumentoDAOimpl.connectNearbyMonuments(50);
         } finally {
             neo4jConnection.close(); // Siempre hay que cerrar la conexión
         }
