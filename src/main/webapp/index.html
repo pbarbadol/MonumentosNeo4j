@@ -1,10 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html>
+    <head>
+        <title>Mapa Caceres Monumentos</title>
+        <style>
+            @import url("https://unpkg.com/leaflet@1.9.4/dist/leaflet.css");
+            #map {
+                margin: 0 auto;
+                width: 50%;
+                min-height: 400px;
+                max-height: 500px;
+                height: 100%;
+            }
+        </style>
+    </head>
+    <body>
+    Visualizacion monumentos de Caceres
+    <div id="map"></div>
+    <!-- Make sure you put this AFTER Leaflet's CSS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin="">
+    </script>
+    <script>
+        var map = L.map('map').setView([39.4749936,-6.3722448], 14);
 
-</body>
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
+        }).addTo(map);
+    </script>
+    </body>
 </html>
