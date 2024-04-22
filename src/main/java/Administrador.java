@@ -1,7 +1,9 @@
 import dao.Neo4jConnection;
 import dao.MonumentoDAOimpl;
+import dao.UsuarioDAOImpl;
 import lectura.MonumentoParser;
 import model.Monumento;
+import model.Usuario;
 
 import java.util.List;
 
@@ -10,6 +12,7 @@ public class Administrador {
     public static void main(String[] args) {
         Neo4jConnection neo4jConnection = new Neo4jConnection("bolt://localhost:7687", "neo4j", "monumento"); // Cambia estos datos si es necesario
         MonumentoDAOimpl monumentoDAOimpl = new MonumentoDAOimpl(neo4jConnection.getDriver());
+        UsuarioDAOImpl usuarioDAOImpl = new UsuarioDAOImpl(neo4jConnection.getDriver());
         try {
 
             List<Monumento> monumentos = MonumentoParser.parseMonumentos("src/main/resources/monumentos.json");
