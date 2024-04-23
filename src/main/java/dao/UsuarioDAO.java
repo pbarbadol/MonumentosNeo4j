@@ -8,6 +8,6 @@ public interface UsuarioDAO {
     void insertUsuario(Usuario usuario);
     Usuario findUsuarioByEmail(String email);
     List<Usuario> getAllUsuarios();
-    void updateUsuario(Usuario usuario);
+    void updateUsuario(Usuario usuario, Usuario usuarioNuevo);
     void deleteUsuarioByEmail(String email);
 }

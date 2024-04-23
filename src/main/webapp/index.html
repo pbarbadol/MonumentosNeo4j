@@ -45,23 +45,17 @@
 <body>
 <h2>Visualización de monumentos de Cáceres</h2>
 <div id="map"></div>
+<div id="welcomeMessage" style="display: none;">
+    <h3>Bienvenido, <span id="userName"></span>!</h3>
+</div>
 <div class="auth-buttons">
-    <button onclick="showLoginForm()">Iniciar Sesión</button>
-    <button onclick="showSignupForm()">Registrarse</button>
+    <a href="login.html"><button id="loginButton">Iniciar Sesión</button></a>
+    <a href="signup.html"><button id="signupButton">Registrarse</button></a>
+    <a href="profile.html"><button id="profileButton">Acceder al Perfil</button></a>
 </div>
 
-<div id="loginForm" style="display: none;">
-    <h3>Iniciar Sesión</h3>
-    <form id="login">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Iniciar Sesión</button>
-    </form>
-</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script src="app.js"></script>  <!-- Referencia al archivo JavaScript separado -->
+<script src="app.js"></script>
 </body>
 </html>

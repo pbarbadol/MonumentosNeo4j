@@ -63,13 +63,14 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     }
 
     @Override
-    public void updateUsuario(Usuario usuario) {
+    public void updateUsuario(Usuario usuarioAntiguo, Usuario usuarioNuevo) {
         try (Session session = driver.session()) {
-            String query = "MATCH (u:Usuario {email: $email}) SET u.nombre = $nombre, u.password = $password";
+            String query = "MATCH (u:Usuario {email: $emailAntiguo}) SET u.nombre = $nombreNuevo, u.email = $emailNuevo, u.password = $passwordNueva";
             session.run(query, Values.parameters(
-                    "email", usuario.getEmail(),
-                    "nombre", usuario.getNombre(),
-                    "password", usuario.getPassword()
+                    "emailAntiguo", usuarioAntiguo.getEmail(),
+                    "emailNuevo", usuarioNuevo.getEmail(), // Se actualiza el email
+                    "nombreNuevo", usuarioNuevo.getNombre(),
+                    "passwordNueva", usuarioNuevo.getPassword()
             ));
         }
     }

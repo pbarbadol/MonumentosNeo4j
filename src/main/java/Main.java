@@ -1,4 +1,5 @@
 import controller.MonumentoController;
+import controller.UsuarioController;
 import dao.MonumentoDAOimpl;
 import dao.Neo4jConnection;
 import dao.UsuarioDAOImpl;
@@ -19,6 +20,7 @@ public class Main {
 
             // Inicializar el controlador con los DAOs
             new MonumentoController(monumentoDAOimpl);
+            new UsuarioController(usuarioDAOImpl);
 
             Spark.get("/", (req, res) -> {
                 res.redirect("index.html"); // Redirige la ruta raíz al archivo HTML

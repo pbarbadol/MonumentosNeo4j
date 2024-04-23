@@ -28,12 +28,37 @@ function loadMonuments() {
 // Cargar los monumentos al cargar la página
 window.onload = loadMonuments;
 
-function showLoginForm() {
-    alert('Mostrar formulario de inicio de sesión');
-    // Aquí iría la lógica para mostrar un formulario de inicio de sesión real
+// Función para verificar la sesión del usuario
+function checkSession() {
+    fetch('http://localhost:8080/usuarios/logueado')
+        .then(response => response.json())
+        .then(data => {
+            const loginBtn = document.getElementById('loginButton');
+            const signupBtn = document.getElementById('signupButton');
+            const profileBtn = document.getElementById('profileButton');
+            const welcomeMessage = document.getElementById('welcomeMessage');
+            const userNameSpan = document.getElementById('userName');
+
+            if (data.logueado) {
+                loginBtn.style.display = 'none';
+                signupBtn.style.display = 'none';
+                profileBtn.style.display = 'inline';
+                welcomeMessage.style.display = 'block'; // Muestra el mensaje de bienvenida
+                userNameSpan.textContent = data.usuario; // Actualiza el nombre del usuario
+            } else {
+                loginBtn.style.display = 'inline';
+                signupBtn.style.display = 'inline';
+                profileBtn.style.display = 'none';
+                welcomeMessage.style.display = 'none'; // Oculta el mensaje de bienvenida
+            }
+        })
+        .catch(error => console.error('Error checking session:', error));
 }
 
-function showSignupForm() {
-    alert('Mostrar formulario de registro');
-    // Aquí iría la lógica para mostrar un formulario de registro real
-}
+// Verifica la sesión al cargar la página
+window.onload = function() {
+    loadMonuments();
+    checkSession();
+};
+
+
