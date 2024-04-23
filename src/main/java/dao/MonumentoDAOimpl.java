@@ -24,7 +24,7 @@ public class MonumentoDAOimpl implements MonumentoDAO {
     public void insertMonumento(Monumento monumento) {
         try (Session session = driver.session()) {
             String normalizedClass = normalizeClassName(monumento.getClase());
-            String query = String.format("CREATE (m:%s {uri: $uri, location: point({longitude: $geoLong, latitude: $geoLat}), clase: $clase, rdfsLabel: $rdfsLabel, tieneEnlaceSIG: $tieneEnlaceSIG})", normalizedClass);
+            String query = String.format("CREATE (m:%s:MONUMENT {uri: $uri, location: point({longitude: $geoLong, latitude: $geoLat}), clase: $clase, rdfsLabel: $rdfsLabel, tieneEnlaceSIG: $tieneEnlaceSIG})", normalizedClass);
             session.run(query, Values.parameters(
                     "uri", monumento.getUri(),
                     "geoLong", monumento.getGeoLong(),
@@ -41,7 +41,7 @@ public class MonumentoDAOimpl implements MonumentoDAO {
         try (Session session = driver.session()) {
             for (Monumento monumento : monumentos) {
                 String normalizedClass = normalizeClassName(monumento.getClase());
-                String query = String.format("CREATE (m:%s {uri: $uri, location: point({longitude: $geoLong, latitude: $geoLat}), clase: $clase, rdfsLabel: $rdfsLabel, tieneEnlaceSIG: $tieneEnlaceSIG})", normalizedClass);
+                String query = String.format("CREATE (m:%s:MONUMENT {uri: $uri, location: point({longitude: $geoLong, latitude: $geoLat}), clase: $clase, rdfsLabel: $rdfsLabel, tieneEnlaceSIG: $tieneEnlaceSIG})", normalizedClass);
                 session.run(query, Values.parameters(
                         "uri", monumento.getUri(),
                         "geoLong", monumento.getGeoLong(),
@@ -54,12 +54,11 @@ public class MonumentoDAOimpl implements MonumentoDAO {
         }
     }
 
-
     @Override
     public List<Monumento> getAllMonumentos() {
         List<Monumento> monumentos = new ArrayList<>();
         try (Session session = driver.session()) {
-            String query = "MATCH (m) RETURN m.uri as uri, m.location.longitude as geoLong, m.location.latitude as geoLat, m.clase as clase, m.rdfsLabel as rdfsLabel, m.tieneEnlaceSIG as tieneEnlaceSIG";
+            String query = "MATCH (m:MONUMENT) RETURN m.uri as uri, m.location.longitude as geoLong, m.location.latitude as geoLat, m.clase as clase, m.rdfsLabel as rdfsLabel, m.tieneEnlaceSIG as tieneEnlaceSIG";
             Result result = session.run(query);
             while (result.hasNext()) {
                 var record = result.next();
@@ -82,7 +81,7 @@ public class MonumentoDAOimpl implements MonumentoDAO {
         List<Monumento> monumentos = new ArrayList<>();
         String clase = normalizeClassName(className);
         try (Session session = driver.session()) {
-            String query = String.format("MATCH (m:%s) RETURN m.uri as uri, m.location.longitude as geoLong, m.location.latitude as geoLat, m.clase as clase, m.rdfsLabel as rdfsLabel, m.tieneEnlaceSIG as tieneEnlaceSIG", clase);
+            String query = String.format("MATCH (m:%s:MONUMENT) RETURN m.uri as uri, m.location.longitude as geoLong, m.location.latitude as geoLat, m.clase as clase, m.rdfsLabel as rdfsLabel, m.tieneEnlaceSIG as tieneEnlaceSIG", clase);
             Result result = session.run(query);
             while (result.hasNext()) {
                 var record = result.next();
@@ -103,7 +102,7 @@ public class MonumentoDAOimpl implements MonumentoDAO {
     @Override
     public Monumento findMonumentoByUri(String uri) {
         try (Session session = driver.session()) {
-            String query = "MATCH (m {uri: $uri}) RETURN m.uri as uri, m.location.longitude as geoLong, m.location.latitude as geoLat, m.clase as clase, m.rdfsLabel as rdfsLabel, m.tieneEnlaceSIG as tieneEnlaceSIG";
+            String query = "MATCH (m:MONUMENT {uri: $uri}) RETURN m.uri as uri, m.location.longitude as geoLong, m.location.latitude as geoLat, m.clase as clase, m.rdfsLabel as rdfsLabel, m.tieneEnlaceSIG as tieneEnlaceSIG";
             Result result = session.run(query, Values.parameters("uri", uri));
             if (result.hasNext()) {
                 var record = result.next();
@@ -124,7 +123,7 @@ public class MonumentoDAOimpl implements MonumentoDAO {
     public void updateMonumento(Monumento monumento) {
         try (Session session = driver.session()) {
             String normalizedClass = normalizeClassName(monumento.getClase());
-            String query = String.format("MATCH (m:%s {uri: $uri}) " +
+            String query = String.format("MATCH (m:%s:MONUMENT {uri: $uri}) " +
                     "SET m.location = point({longitude: $geoLong, latitude: $geoLat}), " +
                     "m.clase = $clase, m.rdfsLabel = $rdfsLabel, m.tieneEnlaceSIG = $tieneEnlaceSIG", normalizedClass);
             session.run(query, Values.parameters(
@@ -138,11 +137,10 @@ public class MonumentoDAOimpl implements MonumentoDAO {
         }
     }
 
-
     @Override
     public void deleteMonumentoByUri(String uri) {
         try (Session session = driver.session()) {
-            String query = "MATCH (m {uri: $uri}) DELETE m";
+            String query = "MATCH (m:MONUMENT {uri: $uri}) DELETE m";
             session.run(query, Values.parameters("uri", uri));
         }
     }
@@ -150,20 +148,15 @@ public class MonumentoDAOimpl implements MonumentoDAO {
     @Override
     public void deleteAllRelationships() {
         try (Session session = driver.session()) {
-            // Consulta para eliminar todas las relaciones
             String query = "MATCH ()-[r]-() DELETE r";
             session.run(query);
-        } catch (Exception e) {
-            System.err.println("Error al eliminar todas las relaciones: " + e.getMessage());
-            e.printStackTrace();
         }
     }
-
 
     @Override
     public void deleteAllMonumentos() {
         try (Session session = driver.session()) {
-            String query = "MATCH (m) DELETE m";
+            String query = "MATCH (m:MONUMENT) DELETE m";
             session.run(query);
         }
     }
@@ -171,19 +164,11 @@ public class MonumentoDAOimpl implements MonumentoDAO {
     @Override
     public void connectNearbyMonuments(double distanceThreshold) {
         try (Session session = driver.session()) {
-            // Usamos MERGE para asegurar que no se creen relaciones duplicadas
-            // y SET para establecer la propiedad 'distance' en la relación
-            String query = "MATCH (m1), (m2) " +
+            String query = "MATCH (m1:MONUMENT), (m2:MONUMENT) " +
                     "WHERE m1 <> m2 AND point.distance(m1.location, m2.location) < $distance " +
                     "MERGE (m1)-[r:CERCANO_A]->(m2) " +
                     "SET r.distance = point.distance(m1.location, m2.location)";
             session.run(query, Values.parameters("distance", distanceThreshold));
-        } catch (Exception e) {
-            System.err.println("Error al conectar monumentos cercanos: " + e.getMessage());
-            e.printStackTrace();
         }
     }
-
-
 }
-
