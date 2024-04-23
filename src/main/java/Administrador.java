@@ -22,6 +22,11 @@ public class Administrador {
             }
 
             monumentoDAOimpl.insertMonumentos(monumentos);
+            usuarioDAOImpl.insertUsuario(new Usuario("Pablo", "pp@pp.com", "pp123"));
+            usuarioDAOImpl.insertUsuario(new Usuario("Iker", "ii@ii.com", "ii123"));
+            usuarioDAOImpl.insertUsuario(new Usuario("Fran", "ff@ff.com", "ff123"));
+            usuarioDAOImpl.insertUsuario(new Usuario("Alberto", "aa@aa.com", "aa123"));
+            usuarioDAOImpl.insertUsuario(new Usuario("Javier", "jj@jj.com", "jj123"));
 
             monumentos.clear();
 

@@ -18,11 +18,11 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     @Override
     public void insertUsuario(Usuario usuario) {
         try (Session session = driver.session()) {
-            String query = "CREATE (u:Usuario {nombre: $nombre, email: $email, contrasena: $contrasena})";
+            String query = "CREATE (u:Usuario {nombre: $nombre, email: $email, password: $password})";
             session.run(query, Values.parameters(
                     "nombre", usuario.getNombre(),
                     "email", usuario.getEmail(),
-                    "contrasena", usuario.getContrasena()
+                    "password", usuario.getPassword()
             ));
         }
     }
@@ -30,14 +30,14 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     @Override
     public Usuario findUsuarioByEmail(String email) {
         try (Session session = driver.session()) {
-            String query = "MATCH (u:Usuario {email: $email}) RETURN u.nombre as nombre, u.email as email, u.contrasena as contrasena";
+            String query = "MATCH (u:Usuario {email: $email}) RETURN u.nombre as nombre, u.email as email, u.password as password";
             var result = session.run(query, Values.parameters("email", email));
             if (result.hasNext()) {
                 var record = result.next();
                 return new Usuario(
                         record.get("nombre").asString(),
                         record.get("email").asString(),
-                        record.get("contrasena").asString()
+                        record.get("password").asString()
                 );
             }
         }
@@ -48,14 +48,14 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     public List<Usuario> getAllUsuarios() {
         List<Usuario> usuarios = new ArrayList<>();
         try (Session session = driver.session()) {
-            String query = "MATCH (u:Usuario) RETURN u.nombre as nombre, u.email as email, u.contrasena as contrasena";
+            String query = "MATCH (u:Usuario) RETURN u.nombre as nombre, u.email as email, u.password as password";
             var result = session.run(query);
             while (result.hasNext()) {
                 var record = result.next();
                 usuarios.add(new Usuario(
                         record.get("nombre").asString(),
                         record.get("email").asString(),
-                        record.get("contrasena").asString()
+                        record.get("password").asString()
                 ));
             }
         }
@@ -65,11 +65,11 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     @Override
     public void updateUsuario(Usuario usuario) {
         try (Session session = driver.session()) {
-            String query = "MATCH (u:Usuario {email: $email}) SET u.nombre = $nombre, u.contrasena = $contrasena";
+            String query = "MATCH (u:Usuario {email: $email}) SET u.nombre = $nombre, u.password = $password";
             session.run(query, Values.parameters(
                     "email", usuario.getEmail(),
                     "nombre", usuario.getNombre(),
-                    "contrasena", usuario.getContrasena()
+                    "password", usuario.getPassword()
             ));
         }
     }

@@ -3,12 +3,12 @@ package model;
 public class Usuario {
     protected String nombre;
     protected String email;
-    protected char[] contrasena;
+    protected char[] password;
 
-    public Usuario(String nombre, String email, String contrasena) {
+    public Usuario(String nombre, String email, String password) {
         this.nombre = nombre;
         setEmail(email);
-        this.contrasena = contrasena.toCharArray();
+        this.password = password.toCharArray();
     }
 
     // Métodos getters y setters
@@ -32,12 +32,12 @@ public class Usuario {
         }
     }
 
-    public String getContrasena() {
-        return new String(contrasena);
+    public String getPassword() {
+        return new String(password);
     }
 
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena.toCharArray();
+    public void setPassword(String password) {
+        this.password = password.toCharArray();
     }
 
     // Método para mostrar información básica del usuario
