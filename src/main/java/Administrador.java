@@ -17,6 +17,10 @@ public class Administrador {
 
             List<Monumento> monumentos = MonumentoParser.parseMonumentos("src/main/resources/monumentos.json");
 
+            for(Monumento monumento : monumentos) {
+                System.out.println(monumento);
+            }
+
             monumentoDAOimpl.insertMonumentos(monumentos);
 
             monumentos.clear();

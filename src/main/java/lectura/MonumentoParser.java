@@ -1,16 +1,17 @@
 package lectura;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import model.Monumento;
 
-import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Clase que se encarga de parsear los monumentos de un archivo JSON
- */
 public class MonumentoParser {
 
     static private String normalizeClassName(String className) {
@@ -19,21 +20,23 @@ public class MonumentoParser {
 
     static public List<Monumento> parseMonumentos(String filePath) {
         List<Monumento> monumentos = new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper();
+        Gson gson = new Gson();
 
-        try {
-            JsonNode root = mapper.readTree(new File(filePath));
-            JsonNode results = root.path("results").path("bindings");
+        try (Reader reader = new FileReader(filePath)) {
+            // Parsea el JSON desde el archivo y obtén el array 'results'
+            JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
+            JsonArray results = jsonObject.getAsJsonObject("results").getAsJsonArray("bindings");
 
-            for (JsonNode result : results) {
+            for (JsonElement resultElement : results) {
+                JsonObject result = resultElement.getAsJsonObject();
+
                 Monumento monumento = new Monumento();
-
-                monumento.setUri(result.path("uri").path("value").asText());
-                monumento.setGeoLong(result.path("geo_long").path("value").asDouble());
-                monumento.setGeoLat(result.path("geo_lat").path("value").asDouble());
-                monumento.setClase(normalizeClassName(result.path("clase").path("value").asText()));
-                monumento.setRdfsLabel(result.path("rdfs_label").path("value").asText().trim());
-                monumento.setTieneEnlaceSIG(result.path("tieneEnlaceSIG").path("value").asText().trim());
+                monumento.setUri(result.getAsJsonObject("uri").get("value").getAsString());
+                monumento.setGeoLong(result.getAsJsonObject("geo_long").get("value").getAsDouble());
+                monumento.setGeoLat(result.getAsJsonObject("geo_lat").get("value").getAsDouble());
+                monumento.setClase(normalizeClassName(result.getAsJsonObject("clase").get("value").getAsString()));
+                monumento.setRdfsLabel(result.getAsJsonObject("rdfs_label").get("value").getAsString().trim());
+                monumento.setTieneEnlaceSIG(result.getAsJsonObject("tieneEnlaceSIG").get("value").getAsString().trim());
 
                 monumentos.add(monumento);
             }

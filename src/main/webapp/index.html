@@ -50,25 +50,18 @@
     <button onclick="showSignupForm()">Registrarse</button>
 </div>
 
+<div id="loginForm" style="display: none;">
+    <h3>Iniciar Sesión</h3>
+    <form id="login">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="password">Contraseña:</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+</div>
+
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
-    var map = L.map('map').setView([39.4749936, -6.3722448], 14);
-    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, DeLorme, NAVTEQ, USGS, Intermap, iPC, NRCAN, Esri Japan, METI, Esri China (Hong Kong), Esri (Thailand), TomTom, 2012'
-    }).addTo(map);
-
-    var plazaMayor = L.marker([39.4749936, -6.3722448]).addTo(map);
-    plazaMayor.bindPopup("<b>Plaza Mayor</b>");
-
-    function showLoginForm() {
-        alert('Mostrar formulario de inicio de sesión');
-        // Aquí iría la lógica para mostrar un formulario de inicio de sesión real
-    }
-
-    function showSignupForm() {
-        alert('Mostrar formulario de registro');
-        // Aquí iría la lógica para mostrar un formulario de registro real
-    }
-</script>
+<script src="app.js"></script>  <!-- Referencia al archivo JavaScript separado -->
 </body>
 </html>
