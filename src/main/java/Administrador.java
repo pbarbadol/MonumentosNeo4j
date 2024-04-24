@@ -15,13 +15,13 @@ public class Administrador {
         UsuarioDAOImpl usuarioDAOImpl = new UsuarioDAOImpl(neo4jConnection.getDriver());
         try {
 
-            List<Monumento> monumentos = MonumentoParser.parseMonumentos("src/main/resources/monumentos.json");
+            List<Monumento> monumentos = MonumentoParser.parseMonumentos("src/main/resources/monumentos.json"); //Obtenemos la lista de monumentos
 
             for(Monumento monumento : monumentos) {
                 System.out.println(monumento);
             }
 
-            monumentoDAOimpl.insertMonumentos(monumentos);
+            monumentoDAOimpl.insertMonumentos(monumentos); //Insertamos los monumentos en neo4j
             usuarioDAOImpl.insertUsuario(new Usuario("Pablo", "pp@pp.com", "pp123"));
             usuarioDAOImpl.insertUsuario(new Usuario("Iker", "ii@ii.com", "ii123"));
             usuarioDAOImpl.insertUsuario(new Usuario("Fran", "ff@ff.com", "ff123"));
@@ -35,7 +35,7 @@ public class Administrador {
                 System.out.println(arco);
             }
 
-            monumentoDAOimpl.connectNearbyMonuments(50);
+            monumentoDAOimpl.connectNearbyMonuments(50); // Conectamos los monumentos cercanos
         } finally {
             neo4jConnection.close(); // Siempre hay que cerrar la conexión
         }
