@@ -82,4 +82,13 @@ public class UsuarioDAOImpl implements UsuarioDAO {
             session.run(query, Values.parameters("email", email));
         }
     }
+
+    @Override
+    public boolean addFavoriteMonument(String email, String uri) {
+        try (Session session = driver.session()) {
+            String query = "MATCH (u:Usuario {email: $email}), (m:MONUMENT {uri: $uri}) CREATE (u)-[:FAVORITO]->(m)";
+            var result = session.run(query, Values.parameters("email", email, "uri", uri));
+            return result.consume().counters().nodesCreated() > 0;
+        }
+    }
 }

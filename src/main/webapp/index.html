@@ -43,15 +43,23 @@
     </style>
 </head>
 <body>
+<div class="auth-buttons">
+    <a href="login.html"><button id="loginButton">Iniciar Sesión</button></a>
+    <a href="signup.html"><button id="signupButton">Registrarse</button></a>
+    <a href="profile.html"><button id="profileButton">Acceder al Perfil</button></a>
+</div>
+
 <h2>Visualización de monumentos de Cáceres</h2>
 <div id="map"></div>
 <div id="welcomeMessage" style="display: none;">
     <h3>Bienvenido, <span id="userName"></span>!</h3>
 </div>
-<div class="auth-buttons">
-    <a href="login.html"><button id="loginButton">Iniciar Sesión</button></a>
-    <a href="signup.html"><button id="signupButton">Registrarse</button></a>
-    <a href="profile.html"><button id="profileButton">Acceder al Perfil</button></a>
+
+<div id="monumentActions" style="display: none;">
+    <button id="addMonumentButton">Añadir Monumento</button>
+    <button id="editMonumentButton">Editar Monumento</button>
+    <button id="deleteMonumentButton">Eliminar Monumento</button>
+    <button id="addFavoriteButton">Añadir a Favoritos</button>
 </div>
 
 

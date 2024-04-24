@@ -150,6 +150,21 @@ public class UsuarioController {
             return "Usuario eliminado exitosamente";
         });
 
+        // Añadir a favoritos
+        post("/usuarios/favoritos/add/:uri", (req, res) -> {
+            String uri = req.params(":uri");
+            Usuario user = req.session().attribute("usuario");
+            boolean success = usuarioDAO.addFavoriteMonument(user.getEmail(), uri); // Supone manejo de sesión
+            if (success) {
+                res.status(201); // HTTP 201 Created
+                return "{}";
+            } else {
+                res.status(500); // HTTP 500 Internal Server Error
+                return "{}";
+            }
+        });
+
+
 
     }
 }

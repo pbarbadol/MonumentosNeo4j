@@ -10,4 +10,5 @@ public interface UsuarioDAO {
     List<Usuario> getAllUsuarios();
     void updateUsuario(Usuario usuario, Usuario usuarioNuevo);
     void deleteUsuarioByEmail(String email);
+    boolean addFavoriteMonument(String email, String uri);
 }

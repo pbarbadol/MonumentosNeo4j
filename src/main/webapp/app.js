@@ -38,27 +38,114 @@ function checkSession() {
             const profileBtn = document.getElementById('profileButton');
             const welcomeMessage = document.getElementById('welcomeMessage');
             const userNameSpan = document.getElementById('userName');
+            const monumentActions = document.getElementById('monumentActions');
 
             if (data.logueado) {
                 loginBtn.style.display = 'none';
                 signupBtn.style.display = 'none';
                 profileBtn.style.display = 'inline';
-                welcomeMessage.style.display = 'block'; // Muestra el mensaje de bienvenida
-                userNameSpan.textContent = data.usuario; // Actualiza el nombre del usuario
+                welcomeMessage.style.display = 'block';
+                userNameSpan.textContent = data.usuario;
+                monumentActions.style.display = 'block'; // Muestra los botones de acciones de monumentos
             } else {
                 loginBtn.style.display = 'inline';
                 signupBtn.style.display = 'inline';
                 profileBtn.style.display = 'none';
-                welcomeMessage.style.display = 'none'; // Oculta el mensaje de bienvenida
+                welcomeMessage.style.display = 'none';
+                monumentActions.style.display = 'none'; // Oculta los botones de acciones de monumentos
             }
         })
         .catch(error => console.error('Error checking session:', error));
 }
 
+// Añadir Monumento
+function addMonument() {
+    // Aquí se puede añadir un formulario o similar para capturar los datos del nuevo monumento
+    // Ejemplo de cómo enviar un POST con datos ficticios
+    fetch('http://localhost:8080/monumentos/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            nombre: "Nuevo Monumento",
+            geoLat: 39.47,
+            geoLong: -6.37,
+            clase: "Historia"
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Monumento añadido:', data);
+            // Recargar los monumentos para mostrar el nuevo
+            loadMonuments();
+        })
+        .catch(error => console.error('Error al añadir monumento:', error));
+}
+
+// Editar Monumento
+function editMonument() {
+    // Supone que tienes un identificador para el monumento que quieres editar
+    let monumentId = '123'; // Ejemplo de ID, debería ser dinámico
+    fetch(`http://localhost:8080/monumentos/edit/${monumentId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            nombre: "Monumento Editado",
+            geoLat: 39.47,
+            geoLong: -6.37,
+            clase: "Cultural"
+        })
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Monumento editado:', data);
+            // Recargar los monumentos para mostrar los cambios
+            loadMonuments();
+        })
+        .catch(error => console.error('Error al editar monumento:', error));
+}
+
+// Eliminar Monumento
+function deleteMonument() {
+    let monumentId = '123'; // Ejemplo de ID, debería ser dinámico
+    fetch(`http://localhost:8080/monumentos/delete/${monumentId}`, {
+        method: 'DELETE'
+    })
+        .then(response => {
+            console.log('Monumento eliminado');
+            // Recargar los monumentos para actualizar la lista
+            loadMonuments();
+        })
+        .catch(error => console.error('Error al eliminar monumento:', error));
+}
+
+// Añadir Monumento a Favoritos
+function addFavorite() {
+    let monumentId = '123'; // Ejemplo de ID, debería ser dinámico
+    fetch(`http://localhost:8080/usuarios/favoritos/add/${monumentId}`, {
+        method: 'POST'
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Monumento añadido a favoritos:', data);
+        })
+        .catch(error => console.error('Error al añadir a favoritos:', error));
+}
+
+
+
 // Verifica la sesión al cargar la página
 window.onload = function() {
     loadMonuments();
     checkSession();
+    document.getElementById('addMonumentButton').addEventListener('click', addMonument);
+    document.getElementById('editMonumentButton').addEventListener('click', editMonument);
+    document.getElementById('deleteMonumentButton').addEventListener('click', deleteMonument);
+    document.getElementById('addFavoriteButton').addEventListener('click', addFavorite);
 };
+
 
 

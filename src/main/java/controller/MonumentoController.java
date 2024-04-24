@@ -15,7 +15,7 @@ public class MonumentoController {
     }
 
     private void setupEndpoints() {
-        post("/monumentos", (req, res) -> {
+        post("/monumentos/add", (req, res) -> {
             Monumento monumento = gson.fromJson(req.body(), Monumento.class);
             monumentoDAO.insertMonumento(monumento); //Se inserta el monumento en la BD
             res.status(201); // HTTP 201 Created
@@ -55,6 +55,7 @@ public class MonumentoController {
             res.status(204); // HTTP 204 No Content
             return "{}";
         });
+
 
         post("/monumentos/connect", (req, res) -> {
             double threshold = Double.parseDouble(req.queryParams("threshold"));
