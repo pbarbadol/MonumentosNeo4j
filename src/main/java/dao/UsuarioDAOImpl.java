@@ -1,9 +1,13 @@
 package dao;
 
+import model.Monumento;
 import model.Usuario;
+import org.neo4j.driver.Value;
 import org.neo4j.driver.Driver;
 import org.neo4j.driver.Session;
+import org.neo4j.driver.Record;
 import org.neo4j.driver.Values;
+import org.neo4j.driver.types.Point;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,9 +90,56 @@ public class UsuarioDAOImpl implements UsuarioDAO {
     @Override
     public boolean addFavoriteMonument(String email, String uri) {
         try (Session session = driver.session()) {
-            String query = "MATCH (u:Usuario {email: $email}), (m:MONUMENT {uri: $uri}) CREATE (u)-[:FAVORITO]->(m)";
+            String query = "MATCH (u:Usuario {email: $email}), (m:MONUMENT {uri: $uri}) " +
+                    "MERGE (u)-[r:FAVORITO]->(m) " +
+                    "RETURN r";
             var result = session.run(query, Values.parameters("email", email, "uri", uri));
-            return result.consume().counters().nodesCreated() > 0;
+            return result.hasNext();  // Si la consulta devuelve algo, significa que la relación fue creada o ya existía.
         }
     }
+
+    public List<Monumento> getFavoriteMonuments(String email) {
+        List<Monumento> favorites = new ArrayList<>();
+        try (Session session = driver.session()) {
+            String query = "MATCH (u:Usuario {email: $email})-[:FAVORITO]->(m:MONUMENT) RETURN m";
+            var result = session.run(query, Values.parameters("email", email));
+            while (result.hasNext()) {
+                Record record = result.next();
+                Value monumentValue = record.get("m");
+
+                // Asumiendo que 'location' es un Point y 'x' es longitud y 'y' es latitud
+                Point location = monumentValue.get("location").asPoint();
+                double longitude = location.x();
+                double latitude = location.y();
+
+                Monumento monumento = new Monumento(
+                        monumentValue.get("uri").asString(),
+                        longitude,
+                        latitude,
+                        monumentValue.get("clase").asString(),
+                        monumentValue.get("rdfsLabel").asString(),
+                        monumentValue.get("tieneEnlaceSIG").asString()
+                );
+                favorites.add(monumento);
+            }
+        } catch (Exception e) {
+            // Log error or handle exception
+            e.printStackTrace();
+        }
+        return favorites;
+    }
+
+
+
+    public boolean removeFavoriteMonument(String email, String uri) {
+        try (Session session = driver.session()) {
+            String query = "MATCH (u:Usuario {email: $email})-[r:FAVORITO]->(m:MONUMENT {uri: $uri}) " +
+                    "DELETE r";
+            var result = session.run(query, Values.parameters("email", email, "uri", uri));
+            return result.consume().counters().relationshipsDeleted() > 0;  // Verifica si se eliminó alguna relación.
+        }
+    }
+
+
+
 }

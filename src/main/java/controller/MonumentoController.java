@@ -35,6 +35,7 @@ public class MonumentoController {
         get("/monumentos/:uri", (req, res) -> {
             res.type("application/json");
             Monumento monumento = monumentoDAO.findMonumentoByUri(req.params(":uri"));
+            System.out.println("Uri del monumento: " + req.params(":uri"));
             if (monumento != null) {
                 return gson.toJson(monumento);
             }

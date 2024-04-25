@@ -12,7 +12,7 @@ function loadMonuments() {
         .then(data => {
             data.forEach(monumento => {
                 var marker = L.marker([monumento.geoLat, monumento.geoLong]).addTo(map);
-                marker.bindPopup(`<b>${monumento.rdfsLabel}</b><br>${monumento.clase}<br><a href='monumentProfile.html?uri=${encodeURIComponent(monumento.uri)}'>Ver Perfil</a>`);
+                marker.bindPopup(`<b>${monumento.clase} ${monumento.rdfsLabel}</b><br><a href='monumentProfile.html?uri=${encodeURIComponent(monumento.uri)}'>Ver Perfil</a>`);
             });
         })
         .catch(error => console.error('Error fetching monument data:', error));
@@ -53,6 +53,45 @@ function checkSession() {
         })
         .catch(error => console.error('Error checking session:', error));
 }
+
+function loadFavoriteMonuments() {
+    fetch('http://localhost:8080/usuarios/favoritos') // Asegúrate de que esta URL es correcta
+        .then(response => response.json())
+        .then(data => {
+            map.eachLayer(layer => {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer); // Limpia los marcadores actuales
+                }
+            });
+            data.forEach(monumento => {
+                var marker = L.marker([monumento.geoLat, monumento.geoLong]).addTo(map);
+                marker.bindPopup(`<b>${monumento.clase} ${monumento.rdfsLabel}</b><br><a href='monumentProfile.html?uri=${encodeURIComponent(monumento.uri)}'>Ver Perfil</a>`);
+            });
+        })
+        .catch(error => console.error('Error fetching favorite monument data:', error));
+}
+document.getElementById('loadFavoritesButton').addEventListener('click', loadFavoriteMonuments);
+
+function loadFilteredMonuments() {
+    let selectedType = document.getElementById('typeFilter').value;
+    fetch(`http://localhost:8080/monumentos?type=${encodeURIComponent(selectedType)}`) // Asumiendo que el backend puede manejar este filtro
+        .then(response => response.json())
+        .then(data => {
+            map.eachLayer(layer => {
+                if (layer instanceof L.Marker) {
+                    map.removeLayer(layer); // Limpia los marcadores actuales
+                }
+            });
+            data.forEach(monumento => {
+                if (!selectedType || monumento.clase === selectedType) {
+                    var marker = L.marker([monumento.geoLat, monumento.geoLong]).addTo(map);
+                    marker.bindPopup(`<b>${monumento.clase} ${monumento.rdfsLabel}</b><br><a href='monumentProfile.html?uri=${encodeURIComponent(monumento.uri)}'>Ver Perfil</a>`);
+                }
+            });
+        })
+        .catch(error => console.error('Error fetching filtered monument data:', error));
+}
+
 
 
 // Verifica la sesión al cargar la página

@@ -3,7 +3,10 @@ package controller;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import dao.UsuarioDAO;
+import model.Monumento;
 import model.Usuario;
+
+import java.util.List;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -154,6 +157,8 @@ public class UsuarioController {
         post("/usuarios/favoritos/add/:uri", (req, res) -> {
             String uri = req.params(":uri");
             Usuario user = req.session().attribute("usuario");
+            System.out.println("Usuario: " + user.getEmail());
+            System.out.println("Monumento: " + uri);
             boolean success = usuarioDAO.addFavoriteMonument(user.getEmail(), uri); // Supone manejo de sesión
             if (success) {
                 res.status(201); // HTTP 201 Created
@@ -164,7 +169,32 @@ public class UsuarioController {
             }
         });
 
+        get("/usuarios/favoritos", (req, res) -> {
+            Usuario user = req.session().attribute("usuario");
+            if (user == null) {
+                System.out.println("Operación no autorizada: Usuario no logueado");
+                res.status(401); // HTTP 401 Unauthorized
+                return "Usuario no autorizado";
+            }
 
+            try {
+                System.out.println("Obteniendo favoritos para el usuario: " + user.getEmail());
+                List<Monumento> favoritos = usuarioDAO.getFavoriteMonuments(user.getEmail());
+                if (favoritos.isEmpty()) {
+                    System.out.println("No se encontraron favoritos para el usuario: " + user.getEmail());
+                    return "No hay monumentos favoritos registrados";
+                }
+                for(Monumento m : favoritos){
+                    System.out.println("Monumento favorito: " + m.getRdfsLabel());
+                }
+                res.type("application/json");
+                return gson.toJson(favoritos);
+            } catch (Exception e) {
+                System.out.println("Error al obtener los favoritos: " + e.getMessage());
+                res.status(500); // HTTP 500 Internal Server Error
+                return "{}";
+            }
+        });
 
     }
 }
