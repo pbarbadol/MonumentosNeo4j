@@ -55,12 +55,35 @@
     <h3>Bienvenido, <span id="userName"></span>!</h3>
 </div>
 
-<div id="monumentActions" style="display: none;">
-    <button id="addMonumentButton">Añadir Monumento</button>
-    <button id="editMonumentButton">Editar Monumento</button>
-    <button id="deleteMonumentButton">Eliminar Monumento</button>
-    <button id="addFavoriteButton">Añadir a Favoritos</button>
+<div id="ListaMonumentos" style="display: block;">
+    <a href="monumentos.html"><button id="MonumentButtom">Lista de monumentos</button></a>
 </div>
+
+<div id="addMonumentForm" style="display: none;">
+    <h3>Añadir nuevo monumento</h3>
+    <form id="monumentForm">
+        <label for="monumentName">Nombre:</label>
+        <input type="text" id="monumentName" name="nombre" required><br><br>
+
+        <label for="monumentLatitude">Latitud:</label>
+        <input type="text" id="monumentLatitude" name="geoLat" required><br><br>
+
+        <label for="monumentLongitude">Longitud:</label>
+        <input type="text" id="monumentLongitude" name="geoLong" required><br><br>
+
+        <label for="monumentClass">Clase:</label>
+        <input type="text" id="monumentClass" name="clase" required><br><br>
+
+        <label for="monumentLabel">Etiqueta RDF:</label>
+        <input type="text" id="monumentLabel" name="rdfsLabel" required><br><br>
+
+        <label for="monumentLink">Enlace SIG:</label>
+        <input type="text" id="monumentLink" name="tieneEnlaceSIG" required><br><br>
+
+        <button type="submit">Enviar</button>
+    </form>
+</div>
+
 
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
