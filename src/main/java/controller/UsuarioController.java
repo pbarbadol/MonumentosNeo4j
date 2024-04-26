@@ -196,5 +196,21 @@ public class UsuarioController {
             }
         });
 
+        // Eliminar de favoritos
+        post("/usuarios/favoritos/delete/:uri", (req, res) -> {
+            String uri = req.params(":uri");
+            Usuario user = req.session().attribute("usuario");
+            System.out.println("Usuario: " + user.getEmail());
+            System.out.println("Monumento: " + uri);
+            boolean success = usuarioDAO.removeFavoriteMonument(user.getEmail(), uri); // Supone manejo de sesión
+            if (success) {
+                res.status(200); // HTTP 200 OK
+                return "{}";
+            } else {
+                res.status(500); // HTTP 500 Internal Server Error
+                return "{}";
+            }
+        });
+
     }
 }

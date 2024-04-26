@@ -29,4 +29,19 @@ document.getElementById('favoriteButton').addEventListener('click', function() {
     });
 });
 
+// Eliminar de favoritos
+document.getElementById('unfavoriteButton').addEventListener('click', function() {
+    fetch('http://localhost:8080/usuarios/favoritos/delete/' + encodeURIComponent(monumentId), {
+        method: 'POST',
+        credentials: 'include'
+    }).then(response => {
+        if (response.ok) {
+            alert("Eliminado de favoritos");
+        } else {
+            alert("Error al eliminar de favoritos");
+        }
+    });
+});
+
+
 window.onload = loadMonumentDetails;
