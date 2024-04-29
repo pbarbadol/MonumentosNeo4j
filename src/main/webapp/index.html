@@ -7,30 +7,33 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            background: #f4f4f4;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            margin: 0;
-            height: 100vh;
-            background: #f4f4f4;
         }
 
         #map {
             width: 80%;
-            height: 60%;
+            height: 60vh;
             margin-top: 20px;
         }
 
         .auth-buttons {
             margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         button {
             background-color: #4CAF50;
             color: white;
             padding: 10px 20px;
-            margin: 0 10px;
+            margin: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -40,21 +43,53 @@
         button:hover {
             background-color: #45a049;
         }
+
+        h2, h3 {
+            text-align: center;
+        }
+
+        #welcomeMessage, #ListaMonumentos, #addMonumentForm {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        label {
+            margin-bottom: 5px;
+        }
+
+        input {
+            padding: 5px;
+            margin-bottom: 10px;
+            border-radius: 3px;
+            border: 1px solid #ccc;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
     </style>
 </head>
 <body>
 <div class="auth-buttons">
-    <a href="login.html">
-        <button id="loginButton">Iniciar Sesión</button>
-    </a>
-    <a href="signup.html">
-        <button id="signupButton">Registrarse</button>
-    </a>
-    <a href="profile.html">
-        <button id="profileButton">Acceder al Perfil</button>
-    </a>
+    <a href="login.html"><button id="loginButton">Iniciar Sesión</button></a>
+    <a href="signup.html"><button id="signupButton">Registrarse</button></a>
+    <a href="profile.html"><button id="profileButton">Acceder al Perfil</button></a>
     <button id="loadFavoritesButton">Cargar Favoritos</button>
-    <select id="typeFilter">
+    <select id="typeFilter" onchange="loadFilteredMonuments()">
         <option value="">Todos los tipos</option>
         <option value="CONVENTO">CONVENTO</option>
         <option value="TORRE">TORRE</option>
@@ -63,13 +98,12 @@
         <option value="PALACIO">PALACIO</option>
         <option value="CASA">CASA</option>
         <option value="ARCO">ARCO</option>
-        <option value="MURALLA">MURALLA</option>
-        <option value="PLAZA">PLAZA</option>
-        <option value="FUENTE">FUENTE</option>
+        <option value="ERMITA">ERMITA</option>
+        <option value="CONCATEDRAL">CONCATEDRAL</option>
+        <option value="CUEVA">CUEVA</option>
+        <option value="DOLMEN">DOLMEN</option>
     </select>
-    <button onclick="loadFilteredMonuments()">Filtrar Monumentos</button>
 </div>
-
 
 <h2>Visualización de monumentos de Cáceres</h2>
 <div id="map"></div>
@@ -77,37 +111,34 @@
     <h3>Bienvenido, <span id="userName"></span>!</h3>
 </div>
 
-<div id="ListaMonumentos" style="display: block;">
-    <a href="monumentos.html">
-        <button id="MonumentButtom">Lista de monumentos</button>
-    </a>
+<div id="ListaMonumentos">
+    <a href="monumentos.html"><button id="MonumentButton">Lista de monumentos</button></a>
 </div>
 
 <div id="addMonumentForm" style="display: none;">
     <h3>Añadir nuevo monumento</h3>
     <form id="monumentForm">
         <label for="monumentName">Nombre:</label>
-        <input type="text" id="monumentName" name="nombre" required><br><br>
+        <input type="text" id="monumentName" name="nombre" required><br>
 
         <label for="monumentLatitude">Latitud:</label>
-        <input type="text" id="monumentLatitude" name="geoLat" required><br><br>
+        <input type="text" id="monumentLatitude" name="geoLat" required><br>
 
         <label for="monumentLongitude">Longitud:</label>
-        <input type="text" id="monumentLongitude" name="geoLong" required><br><br>
+        <input type="text" id="monumentLongitude" name="geoLong" required><br>
 
         <label for="monumentClass">Clase:</label>
-        <input type="text" id="monumentClass" name="clase" required><br><br>
+        <input type="text" id="monumentClass" name="clase" required><br>
 
         <label for="monumentLabel">Etiqueta RDF:</label>
-        <input type="text" id="monumentLabel" name="rdfsLabel" required><br><br>
+        <input type="text" id="monumentLabel" name="rdfsLabel" required><br>
 
         <label for="monumentLink">Enlace SIG:</label>
-        <input type="text" id="monumentLink" name="tieneEnlaceSIG" required><br><br>
+        <input type="text" id="monumentLink" name="tieneEnlaceSIG" required><br>
 
         <button type="submit">Enviar</button>
     </form>
 </div>
-
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="app.js"></script>

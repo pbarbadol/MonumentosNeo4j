@@ -30,6 +30,9 @@ function loadMonumentos() {
     });
 }
 
+
+
+
 function addToFavorites(monumentId) {
     console.log("Adding to favorites:", monumentId);
     // Aquí implementamos la lógica para añadir el monumento a los favoritos del usuario
