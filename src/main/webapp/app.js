@@ -92,14 +92,56 @@ function loadFilteredMonuments() {
         .catch(error => console.error('Error fetching filtered monument data:', error));
 }
 
+// Cargar los monumentos en los selectores del formulario
+function loadMonumentsInForm() {
+    fetch('http://localhost:8080/monumentos')
+        .then(response => response.json())
+        .then(data => {
+            let startSelect = document.getElementById('startMonument');
+            let endSelect = document.getElementById('endMonument');
+            data.forEach(monumento => {
+                let option = document.createElement('option');
+                option.value = monumento.uri;
+                option.text = `${monumento.clase} ${monumento.rdfsLabel}`;
+                startSelect.add(option);
+                let optionClone = option.cloneNode(true);
+                endSelect.add(optionClone);
+            });
+        })
+        .catch(error => console.error('Error fetching monument data:', error));
+}
 
+// Función para encontrar y mostrar la ruta más corta entre dos monumentos
+function findShortestPath() {
+    let startUri = document.getElementById('startMonument').value;
+    let endUri = document.getElementById('endMonument').value;
 
-// Verifica la sesión al cargar la página
+    if (startUri && endUri) {
+        fetch(`http://localhost:8080/monumentos/shortestPath?startUri=${encodeURIComponent(startUri)}&endUri=${encodeURIComponent(endUri)}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.length > 0) {
+                    let latlngs = data.map(monumento => [monumento.geoLat, monumento.geoLong]);
+                    let polyline = L.polyline(latlngs, { color: 'red' }).addTo(map);
+                    map.fitBounds(polyline.getBounds());
+                }
+            })
+            .catch(error => console.error('Error fetching shortest path:', error));
+    }
+}
+
+// Cargar los monumentos en los selectores al cargar la página
 window.onload = function() {
     loadMonuments();
     checkSession();
-
+    loadMonumentsInForm();
 };
+
 
 
 

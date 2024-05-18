@@ -15,4 +15,5 @@ public interface MonumentoDAO {
     void deleteAllRelationships();
     void deleteAllMonumentos();
     void connectNearbyMonuments(double distanceThreshold);
+    List<Monumento> findShortestPath(String startUri, String endUri);
 }

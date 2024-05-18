@@ -5,6 +5,8 @@ import dao.MonumentoDAO;
 import model.Monumento;
 import static spark.Spark.*;
 
+import java.util.List;
+
 public class MonumentoController {
     private MonumentoDAO monumentoDAO;
     private Gson gson = new Gson();
@@ -17,10 +19,25 @@ public class MonumentoController {
     private void setupEndpoints() {
         post("/monumentos/add", (req, res) -> {
             Monumento monumento = gson.fromJson(req.body(), Monumento.class);
-            monumentoDAO.insertMonumento(monumento); //Se inserta el monumento en la BD
+            monumentoDAO.insertMonumento(monumento);
             res.status(201); // HTTP 201 Created
-            return gson.toJson(monumento); //Se devuelve como respuesata el monumento insertado en formato JSON
+            return gson.toJson(monumento);
         });
+
+        get("/monumentos/shortestPath", (req, res) -> {
+            String startUri = req.queryParams("startUri");
+            System.out.println("Uri de inicio: " + startUri);
+            String endUri = req.queryParams("endUri");
+            System.out.println("Uri de fin: " + endUri);
+            res.type("application/json");
+            List<Monumento> path = monumentoDAO.findShortestPath(startUri, endUri);
+            System.out.println("Camino: " + path.size());
+            for (Monumento m : path) {
+                System.out.println("Monumento: " + m.getUri());
+            }
+            return gson.toJson(path);
+        });
+
 
         get("/monumentos", (req, res) -> {
             res.type("application/json");
@@ -57,7 +74,6 @@ public class MonumentoController {
             return "{}";
         });
 
-
         post("/monumentos/connect", (req, res) -> {
             double threshold = Double.parseDouble(req.queryParams("threshold"));
             monumentoDAO.connectNearbyMonuments(threshold);
@@ -76,5 +92,7 @@ public class MonumentoController {
             res.status(204); // HTTP 204 No Content
             return "{}";
         });
+
+
     }
 }

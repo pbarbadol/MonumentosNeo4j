@@ -35,7 +35,7 @@ public class Administrador {
                 System.out.println(arco);
             }
 
-            monumentoDAOimpl.connectNearbyMonuments(50); // Conectamos los monumentos cercanos
+            monumentoDAOimpl.connectNearbyMonuments(200); // Conectamos los monumentos cercanos
         } finally {
             neo4jConnection.close(); // Siempre hay que cerrar la conexión
         }

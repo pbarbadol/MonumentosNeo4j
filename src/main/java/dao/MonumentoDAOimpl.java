@@ -171,4 +171,52 @@ public class MonumentoDAOimpl implements MonumentoDAO {
             session.run(query, Values.parameters("distance", distanceThreshold));
         }
     }
+
+
+    @Override
+    public List<Monumento> findShortestPath(String startUri, String endUri) {
+        List<Monumento> path = new ArrayList<>();
+        try (Session session = driver.session()) {
+            String query = "MATCH (start:MONUMENT {uri: $startUri}), (end:MONUMENT {uri: $endUri}), " +
+                    "p = shortestPath((start)-[:CERCANO_A*]-(end)) " +
+                    "RETURN nodes(p) AS nodes";
+
+            System.out.println("Ejecutando consulta Cypher para encontrar el camino más corto:");
+            System.out.println(query);
+
+            Result result = session.run(query, Values.parameters("startUri", startUri, "endUri", endUri));
+
+            if (!result.hasNext()) {
+                System.out.println("No se encontró ningún camino entre " + startUri + " y " + endUri);
+                return path;
+            }
+
+            while (result.hasNext()) {
+                var record = result.next();
+                var nodes = record.get("nodes").asList();
+
+                for (var node : nodes) {
+                    var nodeMap = (org.neo4j.driver.internal.value.NodeValue) node;
+                    var properties = nodeMap.asMap();
+                    Monumento monumento = new Monumento(
+                            properties.get("uri").toString(),
+                            ((org.neo4j.driver.types.Point) properties.get("location")).x(),
+                            ((org.neo4j.driver.types.Point) properties.get("location")).y(),
+                            properties.get("clase").toString(),
+                            properties.get("rdfsLabel").toString(),
+                            properties.get("tieneEnlaceSIG").toString()
+                    );
+                    path.add(monumento);
+                    System.out.println("Añadido monumento al camino: " + monumento.getUri());
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error al ejecutar la consulta Cypher:");
+            e.printStackTrace();
+        }
+        return path;
+    }
+
+
 }
+

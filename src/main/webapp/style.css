@@ -1,0 +1,135 @@
+/* Fuentes medievales */
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IM+Fell+English&display=swap');
+
+body {
+    font-family: 'IM Fell English', serif;
+    background: #e4d7c5; /* Fondo tipo pergamino */
+    color: #3e2723; /* Color marrón oscuro */
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Botones */
+button, input[type="submit"] {
+    background-color: #7b3f00; /* Color marrón */
+    color: #fff;
+    padding: 10px 20px;
+    margin: 10px;
+    border: 2px solid #3e2723; /* Borde marrón oscuro */
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'MedievalSharp', cursive;
+    transition: background-color 0.3s;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #5c2e00; /* Color marrón más oscuro */
+}
+
+/* Encabezados */
+h1, h2, h3 {
+    text-align: center;
+    font-family: 'MedievalSharp', cursive;
+    color: #3e2723;
+}
+
+/* Formularios */
+form {
+    background-color: #f0e5d8; /* Fondo tipo pergamino claro */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    border: 2px solid #3e2723;
+}
+
+/* Etiquetas y entradas */
+label, input, select {
+    font-family: 'IM Fell English', serif;
+    margin-bottom: 10px;
+    color: #3e2723;
+}
+
+input, select {
+    padding: 5px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #3e2723;
+}
+
+/* Mapa */
+#map {
+    width: 80%;
+    height: 60vh;
+    margin-top: 20px;
+    border: 2px solid #3e2723;
+    border-radius: 10px;
+}
+
+/* Botones de autenticación */
+.auth-buttons {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Bienvenida */
+#welcomeMessage {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Formulario de ruta más corta */
+#shortestPathForm {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Formulario de añadir monumento */
+#addMonumentForm {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* ... Estilos previos ... */
+
+/* Estilos específicos para Leaflet */
+.leaflet-container {
+    background: #e4d7c5; /* Fondo tipo pergamino */
+    border: 2px solid #3e2723; /* Borde marrón oscuro */
+    border-radius: 10px;
+}
+
+/* Estilos para controles de Leaflet */
+.leaflet-control {
+    background-color: #f0e5d8; /* Fondo tipo pergamino claro */
+    color: #3e2723; /* Texto marrón oscuro */
+    border: 2px solid #3e2723;
+    border-radius: 5px;
+}
+
+.leaflet-bar a, .leaflet-bar a:hover {
+    background-color: #7b3f00; /* Color marrón */
+    color: #fff;
+    border: 1px solid #3e2723;
+}
+
+.leaflet-popup-content-wrapper {
+    background-color: #f0e5d8; /* Fondo tipo pergamino claro */
+    color: #3e2723;
+    border: 2px solid #3e2723;
+    border-radius: 10px;
+}
+
+.leaflet-popup-tip {
+    background-color: #f0e5d8; /* Fondo tipo pergamino claro */
+    border: 2px solid #3e2723;
+}
+
