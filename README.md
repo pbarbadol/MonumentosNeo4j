@@ -6,7 +6,6 @@
 
 Una aplicación web de portfolio que permite explorar monumentos históricos de Cáceres, utilizando Java con SparkJava para el backend, Neo4j como base de datos de grafos para almacenar y relacionar monumentos, y Leaflet.js para la visualización en un mapa interactivo. Incluye funcionalidades de gestión de usuarios y cálculo de rutas.
 
-*(Opcional: Puedes añadir aquí un GIF o captura de pantalla de la aplicación en funcionamiento)*
 <!-- ![Demostración de ViaNorba](URL_A_TU_IMAGEN_O_GIF) -->
 
 ## Características Principales
@@ -130,7 +129,7 @@ La aplicación expone una API REST gestionada por `MonumentoController` y `Usuar
 
 ## Licencia
 
-Distribuido bajo la Licencia MIT. Ver `LICENSE` para más información. (Asegúrate de tener un archivo LICENSE si usas esta línea).
+Distribuido bajo la Licencia MIT. Ver `LICENSE` para más información.
 
 ---
 
