@@ -134,4 +134,4 @@ Distribuido bajo la Licencia MIT. Ver `LICENSE` para más información. (Asegúr
 
 ---
 
-*Este proyecto fue desarrollado como parte de mi portfolio [Menciona aquí si es para alguna asignatura, bootcamp, o personal].*
+*Este proyecto fue desarrollado como parte de mi portfolio en Ingeniería de Software.*
